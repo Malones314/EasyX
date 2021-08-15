@@ -1,0 +1,54 @@
+//4https://codebus.cn/yangw/36-tasks-g1
+#include<string.h>
+#include<graphics.h>
+#include<math.h>
+#include<iostream>
+ #include<Windows.h>
+ #include<time.h>
+using namespace std;
+
+const double PI = 3.1415926535897932;
+
+int main ( ) {
+	int width = 800;
+	int height = 800;
+	initgraph ( width, height );
+	TCHAR s [5];
+	int t = 0;
+	int x0 = 0, y0 = 0;
+	double xCenter, yCenter;
+	double sBeginX, sBeginY;
+	
+	xCenter = width / 2;
+	yCenter = height / 2;
+
+	double radius = 300;
+	
+	int sWidth, sHight;
+	int maxNumber = 51;
+
+	for ( t = 3; t < maxNumber; t++ ) {
+		swprintf_s ( s, _T("%d"), t );
+		sWidth = textwidth ( s );
+		sHight = textheight ( s );
+		sBeginX = xCenter - sWidth / 2.0;
+		sBeginY = yCenter - sHight / 2.0;
+		outtextxy ( sBeginX, sBeginY, s );
+		Sleep ( 500 );
+		cleardevice ( );
+		POINT* p;
+		p = new POINT [t];
+		double angle = 0;
+		for ( int i = 0; i < t; i++ ) {
+			p [i].x = xCenter + radius * cos ( angle );
+			p [i].y = yCenter + radius * sin ( angle );
+			angle += 2.0 * PI / t;
+		}
+		polygon ( p, t );
+		Sleep ( 500 );
+		delete [ ]p;
+		cleardevice ( );
+	}
+	closegraph ( );
+	return 0;
+}
