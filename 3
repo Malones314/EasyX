@@ -1,0 +1,129 @@
+//3.打印五星红旗https://codebus.cn/yangw/36-tasks-g1
+
+#include<stdio.h>
+#include<graphics.h>
+#include<math.h>
+#include<iostream>
+using namespace std;
+const double PI = 3.1415926535897932;	
+const double angle0 = 2.0 * PI / 5.0;	//两顶点于圆心连线的角度
+
+void putStars ( double x0, double y0, double radius, double angle );	//接受中心坐标，接受外接圆半径，接受逆时针旋转角度(默认为0)，绘制五角星
+int main ( ) {
+	initgraph ( 720, 440 );
+	auto colorSave = getfillcolor ( );
+	int smallLine = 20;
+	int bigLongLine = 15 * smallLine;
+	int bigWideLine = 10 * smallLine;
+	int x0 = 20;
+	int y0 = 20;
+	setorigin ( 0, 440 );   //更改坐标原点
+	setaspectratio ( 1, -1 );   //y轴反转，向上为正
+	
+	setlinecolor ( RED );   
+	// 起始坐标（20，20）;
+	
+	line ( x0, y0, bigLongLine * 2 + x0, y0 );
+	line ( bigLongLine * 2 + x0, y0, bigLongLine * 2 + x0, bigWideLine * 2 + y0 );
+	line ( bigLongLine * 2 + x0, bigWideLine * 2 + y0, x0, bigWideLine * 2 + y0 );
+	line ( x0, bigWideLine * 2 + y0, x0, y0 );
+	
+	setfillcolor ( RED );
+	floodfill ( x0 + 10, y0 + 10, RED , 0 );
+
+	int bigStarX = 120;
+	int bigStarY = 320;
+	int bigStarRadius = 3 * smallLine;
+	
+	setlinecolor ( YELLOW );
+	putStars ( bigStarX, bigStarY, bigStarRadius, 0 );
+	double angle1, angle2, angle3, angle4;
+	angle1 = PI - atan ( 5 / 3.0 );
+	angle2 = PI - atan ( 7 / 1 );
+	angle3 = atan ( 3.5 );
+	angle4 = atan ( 5 / 4 );
+
+	double smallStarCenterX1, smallStarCenterX2, smallStarCenterX3, smallStarCenterX4;
+	double smallStarCenterY1, smallStarCenterY2, smallStarCenterY3, smallStarCenterY4;
+	smallStarCenterX1 = bigStarX + smallLine * 5;
+	smallStarCenterY1 = bigStarY + smallLine * 3;
+	smallStarCenterX2 = bigStarX + smallLine * 7;
+	smallStarCenterY2 = bigStarY + smallLine * 1;
+	smallStarCenterX3 = bigStarX + smallLine * 7;
+	smallStarCenterY3 = bigStarY + smallLine * ( -2 );
+	smallStarCenterX4 = bigStarX + smallLine * 5;
+	smallStarCenterY4 = bigStarY + smallLine * ( -4 );
+
+	putStars ( smallStarCenterX1, smallStarCenterY1, smallLine, angle1 );
+	putStars ( smallStarCenterX2, smallStarCenterY2, smallLine, angle2 );
+	putStars ( smallStarCenterX3, smallStarCenterY3, smallLine, angle3 );
+	putStars ( smallStarCenterX4, smallStarCenterY4, smallLine, angle4 );
+
+	setfillcolor ( YELLOW );
+
+	//填充大五角星
+	floodfill ( bigStarX, bigStarY, YELLOW );
+	floodfill ( bigStarX - smallLine - 1, bigStarY, YELLOW );
+	floodfill ( bigStarX + smallLine + 1, bigStarY, YELLOW );
+	floodfill ( bigStarX, bigStarY + smallLine + 1, YELLOW );
+	floodfill ( bigStarX - smallLine, bigStarY - smallLine, YELLOW );
+	floodfill ( bigStarX + smallLine, bigStarY - smallLine, YELLOW );
+
+	//填充右边小五角星，从上往下
+	floodfill ( smallStarCenterX1, smallStarCenterY1, YELLOW );
+	floodfill ( smallStarCenterX1+10, smallStarCenterY1-1, YELLOW );
+	floodfill ( smallStarCenterX1 + 3, smallStarCenterY1 + 7, YELLOW );
+	floodfill ( smallStarCenterX1 - 5, smallStarCenterY1 + 5, YELLOW );
+	floodfill ( smallStarCenterX1 - 6, smallStarCenterY1 - 6, YELLOW );
+	floodfill ( smallStarCenterX1 + 3, smallStarCenterY1 -7, YELLOW );
+
+	floodfill ( smallStarCenterX2, smallStarCenterY2, YELLOW );
+	floodfill ( smallStarCenterX2 - 2, smallStarCenterY2 + 8, YELLOW );
+	floodfill ( smallStarCenterX2 - 8, smallStarCenterY2, YELLOW );
+	floodfill ( smallStarCenterX2, smallStarCenterY2 - 10, YELLOW );
+	floodfill ( smallStarCenterX2 + 6, smallStarCenterY2 - 4, YELLOW );
+	floodfill ( smallStarCenterX2 + 6, smallStarCenterY2 + 4, YELLOW );
+
+	floodfill ( smallStarCenterX3, smallStarCenterY3, YELLOW );
+	floodfill ( smallStarCenterX3, smallStarCenterY3+12, YELLOW );
+	floodfill ( smallStarCenterX3 - 8, smallStarCenterY3 + 4, YELLOW );
+	floodfill ( smallStarCenterX3 + 8, smallStarCenterY3 + 4, YELLOW );
+	floodfill ( smallStarCenterX3 - 8, smallStarCenterY3 - 12, YELLOW );
+	floodfill ( smallStarCenterX3 + 8, smallStarCenterY3 - 12, YELLOW );
+
+	floodfill ( smallStarCenterX4, smallStarCenterY4, YELLOW );
+	floodfill ( smallStarCenterX4 + 2, smallStarCenterY4 + 8, YELLOW );
+	floodfill ( smallStarCenterX4 - 4, smallStarCenterY4 + 6, YELLOW );
+	floodfill ( smallStarCenterX4, smallStarCenterY4-8, YELLOW );
+	floodfill ( smallStarCenterX4+8, smallStarCenterY4, YELLOW );
+	floodfill ( smallStarCenterX4-10, smallStarCenterY4-6, YELLOW );
+
+	setfillcolor ( colorSave );
+	getchar ( );
+	closegraph ( );
+
+	return 0;
+}
+void putStars ( double x0, double y0, double radius, double angle ) {
+	double x1, x2, x3, x4, x5;
+	double y1, y2, y3, y4, y5;
+	
+	x1 = x0 - sin ( angle ) * radius;
+	x2 = x0 - sin ( angle0 + angle ) * radius;
+	x3 = x0 - sin ( 2 * angle0 + angle ) * radius;
+	x4 = x0 - sin ( 3 * angle0 + angle ) * radius;
+	x5 = x0 + sin ( angle0 - angle ) * radius;
+
+	y1 = y0 + cos ( angle ) * radius;
+	y2 = y0 + cos ( angle0 + angle ) * radius;
+	y3 = y0 + cos ( 2 * angle0 + angle ) * radius;
+	y4 = y0 + cos ( 3 * angle0 + angle ) * radius;
+	y5 = y0 + cos ( angle0 - angle ) * radius;
+
+	line ( x1, y1, x3, y3 );
+	line ( x3, y3, x5, y5 );
+	line ( x5, y5, x2, y2 );
+	line ( x2, y2, x4, y4 );
+	line ( x4, y4, x1, y1 );
+
+}
