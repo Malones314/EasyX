@@ -1,0 +1,81 @@
+#include<graphics.h>
+#include<math.h>
+#include<Windows.h>
+#include<string>
+const double PI = 3.1415926535897932;
+int main ( ) {
+	const int width = 1520;
+	const int hight = 760;
+	initgraph ( width, hight );
+
+	//设置坐标系参数
+	const int originX0 = 0;
+	const int originY0 = hight;
+	const int originX = 1;
+	const int originY = -1;
+	//设置原点和单元格长度
+	const int x0 = 20;
+	const int y0 = 20;
+	const int step = 20;
+
+	double ballX [4];
+	double ballY [4];
+	double ballRadius [4];
+	double ballA [3];
+	double ballB [3];
+	ballX [0] = x0 + 37 * step;
+	ballY[0] = y0 + 18 * step;
+	ballRadius[0] = 2 * step;
+	ballA[0] = 15 * step;
+	ballB[0] = 4 * step;
+	ballX [1] = ballX [0] + ballA [0];
+	ballY [1] = ballX [0] + ballB [0];
+	ballRadius[1] = 0.5 * step;
+	ballA[1] = 4 * step;
+	ballB[1] = 10 * step;
+	ballX [2] = ballX [1];
+	ballY[2] = ballY[1] + ballB[1];
+	ballRadius[2] = 0.5 * step;
+	ballA[2] = 5 * step;
+	ballB[2] = 3 * step;
+	ballX [3] = ballX [2] + ballA [2];
+	ballY [3] = ballY [2] + ballB [2];
+	ballRadius [3] = 0.5 * step;
+
+	setorigin ( originX0, originY0 );
+	setaspectratio ( originX, originY );
+	double angle = 0;
+	COLORREF myColor [4] = { RED, BLUE, YELLOW, GREEN };
+	while ( 1 ) {
+		ballX [0] = cos ( angle ) * -15 * step + x0 + 37 * step;
+		ballY [0] = sin ( angle ) * -5 * step + y0 + 18 * step;
+		ballX [1] = ballA [0] * -cos ( angle ) + ballX [0];
+		ballY [1] = ballB [0] * -sin ( angle ) + ballY [0];
+		ballX [2] = ballA [1] * cos ( angle ) + ballX [1];
+		ballY [2] = ballB [1] * sin ( angle ) + ballY [1];
+		ballX [3] = ballA [2] * cos ( angle ) + ballX [2];
+		ballY [3] = ballB [2] * sin ( angle ) + ballY [2];
+		angle += 0.1;
+		if ( angle > 2 * 3.14 )
+			angle = 0;
+
+		setfillcolor ( myColor [0] );
+		solidcircle ( ballX [0], ballY [0], ballRadius [0] );
+		setfillcolor ( myColor [1] );
+		solidcircle ( ballX [1], ballY [1], ballRadius [1] );
+		setfillcolor ( myColor [2] );
+		solidcircle ( ballX [2], ballY [2], ballRadius [2] );
+		setfillcolor ( myColor [3] );
+		solidcircle ( ballX [3], ballY [3], ballRadius [3] );
+		setlinecolor ( myColor [1] );
+		ellipse ( ballX [0] - ballA [0], ballY [0] + ballB [0], ballX [0] + ballA [0], ballY [0] - ballB [0] );
+		setlinecolor ( myColor [2] );
+		ellipse ( ballX [1] - ballA [1], ballY [1] + ballB [1], ballX [1] + ballA [1], ballY [1] - ballB [1] );
+		setlinecolor ( myColor [3] );
+		ellipse ( ballX [2] - ballA [2], ballY [2] + ballB [2], ballX [2] + ballA [2], ballY [2] - ballB [2] );
+		Sleep ( 35 );
+		cleardevice ( );
+	}
+	closegraph ( );
+	return 0;
+}
