@@ -1,0 +1,49 @@
+//5 https://codebus.cn/yangw/36-tasks-g1
+#include<graphics.h>
+#include<Windows.h>
+#include<time.h>
+#include<math.h>
+#include<string>
+ #include<stdio.h>
+const double PI = 3.1415926535897932;
+int main ( ) {
+	srand ( time ( 0 ) );
+	int width, hight;
+	width = 700;
+	hight = 500;
+	initgraph ( width, hight );
+	setorigin ( 0, hight );
+	setaspectratio ( 1, -1 );
+
+	double x, y;
+	POINT p [ ] = { { 0, 0 }, { width, 0 }, { width, hight }, { 0, hight } };
+	polygon ( p, 4 );
+	
+	x = rand ( ) % width;
+	y = rand ( ) % hight;
+	double radius = 2;
+	double angle = 0.75 * PI;
+	double speed = 5;
+	//往左上角45度运动
+	while ( 1 ) {
+
+		fillcircle ( x, y, radius );
+		
+		if ( x - radius <= 0) {
+			angle -= 0.5 * PI;
+		} else if ( x + radius >= width ) {
+			angle -= 0.5 * PI;
+		}
+		if ( y + radius >= hight ) {
+			angle -= 0.5 * PI;
+		} else if ( y - radius <= 0 ) {
+			angle -= 0.5 * PI;
+		}
+		x += speed * cos ( angle );
+		y += speed * sin ( angle );
+		Sleep ( 20 );
+		clearpolygon ( p, 4 );
+	}
+	closegrqaph( );
+	return 0;
+}
