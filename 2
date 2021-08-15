@@ -1,0 +1,55 @@
+//2.打印正五角星https://codebus.cn/yangw/36-tasks-g1
+
+#include <graphics.h>		
+#include <conio.h>
+#include<math.h>
+const double PI = 3.1415926535897932;
+int main ( ) {
+	initgraph ( 640, 720 );	// 创建绘图窗口，分辨率 640x480
+	double x0 = 100, y0 = 100;
+	double radius = 200;   //设置圆的半径
+	double circleCenterX = 300;
+	double circleCenterY = 300;
+
+	//逆时针排序
+	double fiveStars1x = 0;
+	double fiveStars1y = 0;
+	double fiveStars2x = 0;
+	double fiveStars2y = 0;
+	double fiveStars3x = 0;
+	double fiveStars3y = 0;
+	double fiveStars4x = 0;
+	double fiveStars4y = 0;
+	double fiveStars5x = 0;
+	double fiveStars5y = 0;
+
+	double angle = 2.0 * PI / 5.0;
+
+	fiveStars1x = circleCenterX;
+	fiveStars1y = circleCenterY - radius;
+
+	fiveStars2x = circleCenterX - sin ( angle ) * radius;
+	fiveStars2y = circleCenterY - cos ( angle ) * radius;
+
+	fiveStars5x = circleCenterX + sin ( angle ) * radius;
+	fiveStars5y = circleCenterY - cos ( angle ) * radius;
+		
+	double angle2 = angle / 2.0;
+
+	fiveStars3x = circleCenterX - sin ( angle2 ) * radius;
+	fiveStars3y = circleCenterY + cos ( angle2 ) * radius;
+
+	fiveStars4x = circleCenterX + sin ( angle2 ) * radius;
+	fiveStars4y = circleCenterY + cos ( angle2 ) * radius;
+
+	line ( fiveStars1x, fiveStars1y, fiveStars3x, fiveStars3y );
+	line ( fiveStars3x, fiveStars3y, fiveStars5x, fiveStars5y );
+	line ( fiveStars5x, fiveStars5y, fiveStars2x, fiveStars2y );
+	line ( fiveStars5x, fiveStars5y, fiveStars2x, fiveStars2y );
+	line ( fiveStars2x, fiveStars2y, fiveStars4x, fiveStars4y );
+	line ( fiveStars4x, fiveStars4y, fiveStars1x, fiveStars1y );
+
+	_getch ( );				//按任意键继续
+	closegraph ( );			//关闭图形界面
+	return 0;
+}
