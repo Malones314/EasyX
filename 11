@@ -1,0 +1,26 @@
+#include<graphics.h>
+#include<iostream>
+#include<Windows.h>
+using namespace std;
+int main ( ) {
+	const int width = 400;
+	initgraph ( width, width );
+	const int r = 10;
+	const int l = 60;
+	setbkcolor ( BLACK );
+	cleardevice ( );
+	setlinestyle ( PS_SOLID, r-2 );
+	setlinecolor ( LIGHTGRAY );
+	int i, j;
+	for ( i = 0; i <= width / l; i++ )
+		line ( 0, 0 + i * l, width, 0 + i * l );
+	for ( i = 0; i <= width / l; i++ )
+		line ( 0 + i * l, 0, 0 + i * l, width );
+	setfillcolor ( WHITE );
+	for( i = 0; i <= width / l; i++ )
+		for ( j = 0; j <= width / l; j++ ) {
+			solidcircle ( 0 + i * l, 0 + j * l, r / 2 );
+		}
+	Sleep ( 4000 );
+	return 0;
+}
