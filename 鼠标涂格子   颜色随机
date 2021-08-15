@@ -1,0 +1,56 @@
+#include<graphics.h>
+#include<conio.h>
+#include<Windows.h>
+#include<time.h>
+#include<iostream>
+using namespace std;
+int main ( ) {
+	srand ( time ( 0 ) );
+	const int Long = 400;
+	initgraph ( Long, Long );
+	const int step = 200;
+	for ( int j = 0; j < Long; j += step ) {
+		line ( 0, j, Long, j );
+		line ( j, 0, j, Long );
+	}
+	POINT p [4];
+	MOUSEMSG m;
+	int click [Long/step][Long/step] = { 0 };
+	time_t clockBegin, clockFinish;
+	clockBegin = clock ( );
+	for ( int i = 0; i < ( Long / step ) * ( Long / step ); ) { 
+		int R, G, B;
+		do {
+			R = rand ( ) % 255;
+			G = rand ( ) % 255;
+			B = rand ( ) % 255;
+		} while ( R + G + B == 0 );
+		m = GetMouseMsg ( );
+		if ( m.uMsg == WM_LBUTTONDOWN ) {
+			int l, r;
+			l = m.x / step;
+			r = m.y / step;
+			if ( click [l][r] == 0 ) {
+				click [l][r]++;
+				l *= step;
+				r *= step;
+				i++;
+				p [0].x = l;
+				p [0].y = r;
+				p [1].x = l + step;
+				p [1].y = r;
+				p [2].x = l + step;
+				p [2].y = r + step;
+				p [3].x = l;
+				p [3].y = r + step;
+				setfillcolor ( RGB ( R, G, B ) );
+				fillpolygon ( p, 4 );
+			}
+		}
+	}
+	clockFinish = clock ( );
+	Sleep ( 100 );
+	closegraph ( );
+	cout << "点击 " << ( Long / step ) * ( Long / step ) << " 下，用时：" << (clockFinish - clockBegin)/1000.0 << " s";
+	return 0;
+}
