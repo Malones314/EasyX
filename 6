@@ -1,0 +1,75 @@
+//6 https://codebus.cn/yangw/36-tasks-g1
+#include<graphics.h>
+#include<Windows.h>
+#include<time.h>
+#include<stdio.h>
+#include<math.h>
+void HpSleep ( int ms ) {
+	static clock_t oldclock = clock ( );		// 静态变量，记录上一次 tick
+
+	oldclock += ms * CLOCKS_PER_SEC / 1000;	// 更新 tick
+
+	if ( clock ( ) > oldclock )					// 如果已经超时，无需延时
+		oldclock = clock ( );
+	else
+		while ( clock ( ) < oldclock )			// 延时
+			Sleep ( 1 );						// 释放 CPU 控制权，降低 CPU 占用率
+//			Sleep(0);						// 更高精度、更高 CPU 占用率
+}
+int main ( ) {
+	srand ( time ( 0 ) );
+	double v0X;
+	v0X = 1;
+	double v0Y = 0;
+	double height, width;
+	height = 720;
+	width = 2020;
+	
+	initgraph ( width, height );
+	setorigin ( 0, height );
+	setaspectratio ( 1, -1 );
+	POINT p [ ] = { { 0, 0 }, { 0, height }, { width, height }, { width, 0 } };
+	polygon ( p, 4 );
+
+	double t = 0.0;
+	double ballY = 0.0;
+	double ballY0 = height - 100.0;
+	ballY = height - 100.0;
+	double ballX = 0;
+	double g = 9.8;
+	double radius = 2;
+	double vY = 0;
+	double m = 1;   //质量
+	double E = m * g * ballY;
+	double T = 0.01;
+	while ( E > 1e-5 ) {
+		while ( ballY - radius >= 0) {   //垂直方向自由落体运动
+			fillcircle ( ballX, ballY, radius );
+			ballY = ballY0 -  0.5 * g * t * t;
+			ballX += v0X * T;
+			HpSleep ( T*1000 );
+			t += T;
+			clearpolygon ( p, 4 );
+		}
+		ballY0 = ballY;
+		vY = g * t;
+		E *= 0.95;
+		v0Y = 0.95*vY;
+		t = 0;
+		while ( vY > 0 ) {   //上抛运动
+			fillcircle ( ballX, ballY, radius );
+			ballX += v0X * T;
+			ballY = v0Y * t - 0.5 * g * t * t;
+			vY =v0Y - g * t;
+			t += T;
+			HpSleep ( 1000*T );
+			clearpolygon ( p, 4 );
+		}
+		t = 0;
+		v0Y = 0;
+		ballY0 = ballY;
+	}
+	
+	closegraph ( );
+	return 0;
+}
