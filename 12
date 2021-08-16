@@ -1,0 +1,158 @@
+//一堆反弹的小球（数量可增减）
+#include<graphics.h>
+#include<math.h>
+#include<conio.h>
+#include<Windows.h>
+#include<time.h>
+#include<iostream>
+using namespace std;
+const double PI = 3.14159265358979323846;
+void HSleep ( int sleepTime ) {
+	auto oldClock = clock ( );
+	oldClock += sleepTime + CLOCKS_PER_SEC / 1000;
+	if ( oldClock < clock ( ) )
+		oldClock = clock ( );
+	else
+		while ( oldClock > clock ( ) )
+			Sleep ( 1 );
+}
+class List;
+class Ball {
+	public:
+	double H;
+	double S;
+	double L;
+	int r = 10;
+	double angle;
+	double x;
+	double y;
+	int speed;
+	void setBall ( ) {
+		angle = PI/4;
+		H = rand ( ) % 2400 / 10.0;
+		x = rand ( ) % 4000 / 10.0;
+		y = rand ( ) % 4000 / 10.0;
+		speed = rand ( ) % 9+1;
+		S = 1;
+		L = 0.5;
+		r = 5;
+	}
+};
+class List {
+	public:
+	List* next;
+	Ball ball;
+};
+void deleteList ( List* head, List* deleteOne );
+void destroy ( List* head );
+void plusOneList ( List* head );
+void decreaseOneList ( List* head );
+int main ( ) {
+	srand ( time ( 0 ) );
+	int i, j, t = 0;
+	const int width = 400;
+	const int hight = 400;
+	const int side = 20;
+	const int r = 10;
+	int size = 10;
+	initgraph ( width, hight );
+	setorigin ( 0, hight );
+	setaspectratio ( 1, -1 );
+
+	//POINT p [4] = { { 0, 0 }, { width, 0 }, { width, hight }, { 0, hight } };
+	List* head;
+	head = ( List* ) malloc ( sizeof ( List ) );
+	List* p;
+	p = ( List* ) malloc ( sizeof ( List ) );
+	head->next = p;
+	for ( i = 0; i < size; i++ ) {
+		p->ball.setBall ( );
+		List* l;
+		l = ( List* ) malloc ( sizeof ( List ) );
+		p->next = l;
+		p = p -> next;
+	}
+	p->next = NULL;
+	while ( true ) {
+		if ( _kbhit ( ) ) {
+			char str = _getch ( );			
+			if ( str == '+' ) {
+				plusOneList ( head );
+				size++;
+			} else if ( str == '-' ) {
+				if ( size > 0 ) {
+					decreaseOneList ( head );
+					size--;
+				}
+			}
+		}
+		p = head->next;
+		for ( i = 0; i < size; i++ ) {
+			setfillcolor ( HSLtoRGB ( p->ball.H, p->ball.S, p->ball.L ) );
+			solidcircle ( p->ball.x, p->ball.y, p->ball.r );
+			if ( p->ball.x - p->ball.r<= 0 ) {
+				p->ball.angle -= 0.5 * PI;
+			} else if ( p->ball.x + p->ball.r >= width ) {
+				p->ball.angle -= 0.5 * PI;
+			}
+			if ( p->ball.y + p->ball.r >= hight ) {
+				p->ball.angle -= 0.5 * PI;
+			} else if ( p->ball.y - p->ball.r <= 0 ) {
+				p->ball.angle -= 0.5 * PI;
+			}
+			p->ball.x += p->ball.speed * cos ( p->ball.angle );
+			p->ball.y += p->ball.speed * sin ( p->ball.angle );
+			p = p->next;
+		}
+		HSleep ( 50 );
+		cleardevice ( );
+	}
+	destroy ( head );
+	return 0;
+}
+void deleteList ( List* head, List* deleteOne ) {
+	List* p;
+	p = head->next;
+	while ( p->next != deleteOne )
+		p = p->next;
+	p->next->next = deleteOne->next;
+	p = deleteOne;
+	delete( p );
+}
+void destroy ( List* head ) {
+	List* p;
+	p = head->next;
+	while ( p ) {
+		List* t;
+		t = p;
+		p = p->next;
+		delete( t );
+	}
+	delete( head );
+}
+void plusOneList ( List* head ) {					//在前端添加
+	List* p;
+	p = ( List* ) malloc ( sizeof ( List ) );
+	p->ball.setBall ( );
+	if ( head->next == NULL )
+		head->next = p;
+	else {
+		p->next = head->next;
+		head->next = p;
+	}
+}
+void decreaseOneList ( List* head ) {			//删除最后一个
+	List* p;
+	p = head->next;
+	if ( p->next == NULL )
+		head->next = NULL;
+	else {
+		while ( p->next->next != NULL )
+			p = p->next;
+		List* t;
+		t = p->next;
+		p = t->next;
+		t->next = NULL;
+	}
+	delete( p );
+}
