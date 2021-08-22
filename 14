@@ -1,0 +1,100 @@
+#include<graphics.h>
+#include<math.h>
+#include<conio.h>
+#include<Windows.h>
+#include<time.h>
+#include<iostream>
+using namespace std;
+const double PI = 3.14159265358979323846;
+void HSleep ( int sleepTime ) {
+	auto oldClock = clock ( );
+	oldClock += sleepTime + CLOCKS_PER_SEC / 1000;
+	if ( oldClock < clock ( ) )
+		oldClock = clock ( );
+	else
+		while ( oldClock > clock ( ) )
+			Sleep ( 1 );
+}
+int main ( ) {
+	srand ( time ( 0 ) );
+	int i, j, t = 0;
+	const int width = 200;
+	const int hight = 400;
+	const int side = 40;						//每次循环y下降的速度
+	const int r = 10;
+	initgraph ( width, hight );
+	bool gameOver = false;
+	int sleepTime = 3000;
+	int letterX [3];								//字母初始横坐标
+	char letter [3];
+	int score = 0;								//记录你所得的分数
+	int wrong = 0;								//记录打错的次数
+	long long time = 0;						//记录游戏时间 ( 单位毫秒 )
+	
+	for ( i = 0; i < 3; i++ ) {
+		letterX [i] = rand ( ) % ( width / 4 ) + width / 4;
+		letter [i] = 'A' + rand ( ) % 26;
+	}
+	int letterL = 20;							//字母大小
+	int letterY [3] = { letterL, letterL, letterL };		//字母初始纵坐标（默认为letterL）
+	settextstyle ( letterL, letterL, _T ( "黑体" ) );
+	while ( ( !gameOver ) && ( score < 50 ) ) {
+		for ( i = 0; i < 3; i++ ) {
+			outtextxy ( letterX [i], letterY [i], letter [i] );
+			if ( letterY [i] >= hight ) {
+				gameOver = true;
+				break;
+			}
+			letterY [i] += side;
+		}
+		if ( _kbhit ( ) ) {
+			bool right = false;
+			char input = _getch ( );
+			for ( i = 0; i < 3; i++ ) {
+				if ( letter[i]==input) {
+					right = true;
+					score++;
+					letterX [i] = rand ( ) % ( width / 4 ) + width / 4;
+					letter [i] = 'A' + rand ( ) % 26;
+					letterY [i] = letterL;
+					sleepTime -= 20;
+					break;
+				}
+			}
+			if ( right == false ) {
+				for ( i = 0; i < 3; i++ )
+					letterY [i] += side;
+				wrong++;
+			}
+		}
+		time += sleepTime;
+		HSleep ( sleepTime );
+		cleardevice ( );
+	}
+	settextstyle ( 10, 10, _T ( "黑体" ) );
+
+	if ( score == 50 ) {
+		TCHAR c [ ] = _T ( "你赢了" );
+		outtextxy ( width / 2 - textwidth ( c ), hight / 2 - textheight ( c ), c );
+	}
+	cleardevice ( );
+	//游戏时间、正确数量、错误数量、正确率、打字速度等
+	TCHAR gametime [50];
+	TCHAR correct [50];
+	TCHAR wrongNumber [50];
+	TCHAR correctRate [50];
+	TCHAR typingSpeed [50];
+	_stprintf_s ( gametime, _T ( "游戏时间：%.2lf秒" ), time / 1000.0 );
+	_stprintf_s ( correct, _T ( "正确数量：%d" ), score );
+	_stprintf_s ( wrongNumber, _T ( "错误数量：%d" ), wrong );
+	_stprintf_s ( correctRate, _T ( "正确率：%.2lf%%" ), ( score * 1.0 / ( score + wrong ) ) * 100.0 );
+	_stprintf_s ( typingSpeed, _T ( "打字速度：%.2lf每秒" ), 1.0 * ( score + wrong ) / ( time / 1000.0 ) );
+
+	outtextxy ( width / 2 - textwidth ( gametime ) / 2, hight / 4 - textheight ( gametime ) * 7.5, gametime );
+	outtextxy ( width / 2 - textwidth ( correct ) / 2, hight / 4 - textheight ( correct ) * 6, correct );
+	outtextxy ( width / 2 - textwidth ( wrongNumber ) / 2, hight / 4 - textheight ( wrongNumber ) * 4.5, wrongNumber );
+	outtextxy ( width / 2 - textwidth ( correctRate ) / 2, hight / 4 - textheight ( correctRate ) * 3, correctRate );
+	outtextxy ( width / 2 - textwidth ( typingSpeed ) / 2, hight / 4 - textheight ( typingSpeed ), typingSpeed );
+	Sleep ( 10000 );
+	return 0;
+}
