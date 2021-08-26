@@ -1,0 +1,68 @@
+#include<graphics.h>
+#include<math.h>
+#include<conio.h>
+#include<Windows.h>
+#include<time.h>
+#include<iostream>
+#include<algorithm>
+#include<vector>
+
+using namespace std;
+const double PI = 3.14159265358979323846;
+const double sqrt3 = 1.73205;
+int main ( ) {
+	srand ( time ( 0 ) );
+	int i, j, t = 0;
+	const int width = 600;
+	const int hight = 700;
+	const int side = 20;
+	const int r = 10;	
+	initgraph ( width, hight );
+	setorigin ( 0, hight );   //更改坐标原点
+	setaspectratio ( 1, -1 );   //y轴反转，向上为正
+	vector<POINT> point;
+	POINT p;
+	p.x = 40;
+	p.y = 540.0 / 2 * sqrt3 + 40;
+	point.push_back ( p );
+	p.x = 560;
+	point.push_back ( p );
+	p.x = 300;
+	p.y = 40;
+	point.push_back ( p );
+
+	for ( t = 0; t < 9; t++ ) {
+		vector<POINT> newThreePoint ( 3 * point.size ( ) );
+		for ( i = 0, j = 0; i < point.size ( ) - 1; i++, j += 3 )	{
+			newThreePoint [j].x = 1.0 / 3 * ( point [i + 1].x - point [i].x ) + point [i].x;
+			newThreePoint [j].y = 1.0 / 3 * ( point [i + 1].y - point [i].y ) + point [i].y;
+			newThreePoint [j + 2].x = 2.0 / 3 * ( point [i + 1].x - point [i].x ) + point [i].x;
+			newThreePoint [j + 2].y = 2.0 / 3 * ( point [i + 1].y - point [i].y ) + point [i].y;
+			newThreePoint [j + 1].x = newThreePoint [j].x + 0.5 * ( newThreePoint [j + 2].x - newThreePoint [j].x ) - 0.5 * sqrt3 * ( newThreePoint [j + 2].y - newThreePoint [j].y );
+			newThreePoint [j + 1].y = newThreePoint [j].y + 0.5 * sqrt3 * ( newThreePoint [j + 2].x - newThreePoint [j].x ) + 0.5 * ( newThreePoint [j + 2].y - newThreePoint [j].y );
+		}
+		newThreePoint [j].x = 1.0 / 3 * ( point [0].x - point [i].x ) + point [i].x;
+		newThreePoint [j].y = 1.0 / 3 * ( point [0].y - point [i].y ) + point [i].y;
+		newThreePoint [j + 2].x = 2.0 / 3 * ( point [0].x - point [i].x ) + point [i].x;
+		newThreePoint [j + 2].y = 2.0 / 3 * ( point [0].y - point [i].y ) + point [i].y;
+		newThreePoint [j + 1].x = newThreePoint [j].x + 0.5 * ( newThreePoint [j + 2].x - newThreePoint [j].x ) - 0.5 * sqrt3 * ( newThreePoint [j + 2].y - newThreePoint [j].y );
+		newThreePoint [j + 1].y = newThreePoint [j].y + 0.5 * sqrt3 * ( newThreePoint [j + 2].x - newThreePoint [j].x ) + 0.5 * ( newThreePoint [j + 2].y - newThreePoint [j].y );
+		
+		vector<POINT>final;
+		for ( i = 0, j = 0; i < point.size ( ); i++, j += 3 ) {
+			final.push_back ( point [i] );
+			final.push_back ( newThreePoint [j] );
+			final.push_back ( newThreePoint [j + 1] );
+			final.push_back ( newThreePoint [j + 2] );
+		}
+		for ( i = 0; i < final.size ( ) - 1; i++ ) {
+			line ( final [i].x, final [i].y, final [i + 1].x, final [i + 1].y );
+		}
+		line ( final [i].x, final [i].y, final [0].x, final [0].y );
+		point.erase ( point.begin ( ), point.end ( ) );
+		point.insert ( point.begin ( ), final.begin ( ), final.end ( ) );
+		Sleep ( 2000 );
+		cleardevice ( );
+	}
+	return 0;
+}
